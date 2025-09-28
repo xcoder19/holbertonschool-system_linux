@@ -1,5 +1,5 @@
-#include <stdio.h>
 #include <dirent.h>
+#include <stdio.h>
 
 /**
  * main - entry point
@@ -8,23 +8,23 @@
  */
 int main(void)
 {
+	DIR			  *directory;
 	struct dirent *entry;
-	DIR *dp = opendir(".");
 
-	if (dp == NULL)
+	directory = opendir(".");
+
+	if (directory == NULL)
 	{
-		perror("opendir");
 		return (1);
 	}
 
-	while ((entry = readdir(dp)))
+	while ((entry = readdir(directory)) != NULL)
 	{
-		if (entry->d_name[0] != '.')
-		printf("%s  ", entry->d_name);
+		printf("%s\n", entry->d_name);
 	}
-
-	closedir(dp);
-	printf("\n");
-
+	if (closedir(directory) == -1)
+	{
+		return (1);
+	}
 	return (0);
 }
