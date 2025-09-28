@@ -22,7 +22,7 @@ int main(void)
 	{
 		if (entry->d_name[0] != '.')
 		{
-			printf("%s\n", entry->d_name);
+			printf("%s ", entry->d_name);
 		}
 	}
 	if (closedir(directory) == -1)
