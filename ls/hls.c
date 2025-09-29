@@ -1,22 +1,16 @@
 #include <dirent.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 /**
- * main - entry point
- *
+ * iterate - iterate throught directories and files
+ * @directory: directory
+ * @entry: entry
  * Return: 1 if error and 0 if success
  */
-int main(void)
+
+int iterate(DIR *directory, struct dirent *entry)
 {
-	DIR			  *directory;
-	struct dirent *entry;
-
-	directory = opendir(".");
-
-	if (directory == NULL)
-	{
-		return (1);
-	}
 
 	while ((entry = readdir(directory)) != NULL)
 	{
@@ -25,9 +19,49 @@ int main(void)
 			printf("%s ", entry->d_name);
 		}
 	}
-	if (closedir(directory) == -1)
+	return (0);
+}
+/**
+ * main - entry point
+ * @argc: argument count
+ * @argv: argument array
+ * Return: 1 if error and 0 if success
+ */
+int main(int argc, char *argv[])
+{
+	DIR			  *directory;
+	struct dirent *entry = NULL;
+
+	if (argc >= 2)
 	{
-		return (1);
+		for (int i = 1; i < argc; i++)
+		{
+			directory = opendir(argv[i]);
+			if (directory == NULL)
+			{
+				return (1);
+			}
+
+			iterate(directory, entry);
+
+			if (closedir(directory) == -1)
+			{
+				return (1);
+			}
+		}
+	}
+	else
+	{
+		directory = opendir(".");
+		if (directory == NULL)
+		{
+			return (1);
+		}
+		iterate(directory, entry);
+		if (closedir(directory) == -1)
+		{
+			return (1);
+		}
 	}
 	return (0);
 }
