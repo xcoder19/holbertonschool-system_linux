@@ -9,7 +9,7 @@
  * Return: 1 if error and 0 if success
  */
 
-int iterate(DIR *directory, struct dirent *entry)
+void iterate(DIR *directory, struct dirent *entry)
 {
 
 	while ((entry = readdir(directory)) != NULL)
@@ -18,7 +18,6 @@ int iterate(DIR *directory, struct dirent *entry)
 			printf("%s ", entry->d_name);
 	}
 	putchar('\n');
-	return (0);
 }
 /**
  * main - entry point
@@ -42,8 +41,8 @@ int main(int argc, char *argv[])
 			if (directory == NULL)
 			{
 				fprintf(stderr, "%s: %s %s: %s", argv[0], "cannot acess",
-						argv[i], "No such a file or directory");
-				return (1);
+						argv[i], "No such file or directory");
+				exit(1);
 			}
 
 			iterate(directory, entry);
