@@ -1,16 +1,21 @@
 #include <dirent.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+int	 print_error(char *program_name, char *argument);
+void iterate(DIR *directory);
 
 /**
- * iterate - iterate throught directories and files
- * @directory: directory
- * @entry: entry
+ * iterate - iterate on directory and print name of files
+ * @directory: DIR *
  * Return: 1 if error and 0 if success
  */
 
-void iterate(DIR *directory, struct dirent *entry)
+void iterate(DIR *directory)
 {
+	struct dirent *entry;
 
 	while ((entry = readdir(directory)) != NULL)
 	{
@@ -19,52 +24,65 @@ void iterate(DIR *directory, struct dirent *entry)
 	}
 	putchar('\n');
 }
+
+/**
+ * print_error - prints error and return 2
+ * @program_name : program name
+ * @argument: argument
+ * Return: 2
+ */
+
+int print_error(char *program_name, char *argument)
+{
+	fprintf(stderr, "%s: %s %s: %s", program_name, "cannot access", argument,
+			"No such file or directory");
+	return (2);
+}
 /**
  * main - entry point
  * @argc: argument count
  * @argv: argument array
- * Return: 1 if error and 0 if success
+ * Return: 2 if error and 0 if success
  */
 int main(int argc, char *argv[])
 {
-	DIR			  *directory;
-	struct dirent *entry = NULL;
-
-	if (argc >= 2)
+	if (argc < 2)
 	{
-		int i = argc - 1;
+		DIR *dir = opendir(".");
 
-		while (i <= argc - 1 && i != 0)
+		if (!dir)
 		{
-			if (argc >= 3)
-				printf("%s:\n", argv[i]);
-			directory = opendir(argv[i]);
-			if (directory == NULL)
-			{
-				fprintf(stderr,
-						"%s: cannot access %s: No such file or directory\n",
-						argv[0], argv[i]);
-				exit(2);
-			}
-			i--;
-			iterate(directory, entry);
-			if (i != 0)
-				putchar('\n');
-			if (closedir(directory) == -1)
-				return (1);
+			perror(argv[0]);
+			return (2);
 		}
+		iterate(dir);
+		closedir(dir);
+		return (0);
 	}
-	else
+	for (int i = 1; i < argc; i++)
 	{
-		directory = opendir(".");
+		struct stat st;
 
-		if (directory == NULL)
-			return (1);
+		if (stat(argv[i], &st) == -1)
+			print_error(argv[0], argv[i]);
 
-		iterate(directory, entry);
+		if (S_ISDIR(st.st_mode))
+		{
+			DIR *dir = opendir(argv[i]);
 
-		if (closedir(directory) == -1)
-			return (1);
+			if (!dir)
+				print_error(argv[0], argv[i]);
+
+			if (argc > 2)
+				printf("%s:\n", argv[i]);
+
+			iterate(dir);
+			closedir(dir);
+			if (i < argc - 1)
+				putchar('\n');
+		}
+		else
+			printf("%s\n", argv[i]);
 	}
 	return (0);
 }
