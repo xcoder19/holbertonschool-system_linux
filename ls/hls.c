@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 		DIR *dir = opendir(".");
 
 		if (!dir)
-			print_error(argv[0], NULL);
+			return (print_error(argv[0], NULL));
 
 		iterate(dir);
 		closedir(dir);
@@ -62,14 +62,14 @@ int main(int argc, char *argv[])
 		struct stat st;
 
 		if (stat(argv[i], &st) == -1)
-			print_error(argv[0], argv[i]);
+			return (print_error(argv[0], argv[i]));
 
 		if (S_ISDIR(st.st_mode))
 		{
 			DIR *dir = opendir(argv[i]);
 
 			if (!dir)
-				print_error(argv[0], argv[i]);
+				return (print_error(argv[0], argv[i]));
 
 			if (argc > 2)
 				printf("%s:\n", argv[i]);
