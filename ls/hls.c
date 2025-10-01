@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 				putchar('\n');
 		}
 		else
-			printf("%s\n", argv[i]);
+			printf("%s ", argv[i]);
 	}
 	return (0);
 }
