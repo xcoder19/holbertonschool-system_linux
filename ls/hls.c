@@ -38,13 +38,13 @@ int main(int argc, char *argv[])
 		{
 			if (argc >= 3)
 				printf("%s:\n", argv[i]);
-
 			directory = opendir(argv[i]);
 			if (directory == NULL)
 			{
-				fprintf(stderr, "%s: %s %s: %s", argv[0], "cannot acess",
-						argv[i], "No such file or directory");
-				exit(1);
+				fprintf(stderr,
+						"%s: cannot access %s: No such file or directory\n",
+						argv[0], argv[i]);
+				exit(2);
 			}
 			i--;
 			iterate(directory, entry);
