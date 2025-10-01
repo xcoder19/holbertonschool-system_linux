@@ -32,7 +32,9 @@ int main(int argc, char *argv[])
 
 	if (argc >= 2)
 	{
-		for (int i = 1; i < argc; i++)
+		int i = argc - 1;
+
+		while (i <= argc - 1 && i != 0)
 		{
 			if (argc >= 3)
 				printf("%s:\n", argv[i]);
@@ -44,9 +46,10 @@ int main(int argc, char *argv[])
 						argv[i], "No such file or directory");
 				exit(1);
 			}
-
+			i--;
 			iterate(directory, entry);
-
+			if (i != 0)
+				putchar('\n');
 			if (closedir(directory) == -1)
 				return (1);
 		}
