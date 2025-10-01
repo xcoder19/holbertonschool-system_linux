@@ -51,15 +51,13 @@ int main(int argc, char *argv[])
 		DIR *dir = opendir(".");
 
 		if (!dir)
-		{
-			perror(argv[0]);
-			return (2);
-		}
+			print_error(argv[0], NULL);
+
 		iterate(dir);
 		closedir(dir);
 		return (0);
 	}
-	for (int i = 1; i < argc; i++)
+	for (int i = argc - 1; i <= argc - 1 && i != 0; i--)
 	{
 		struct stat st;
 
@@ -78,7 +76,7 @@ int main(int argc, char *argv[])
 
 			iterate(dir);
 			closedir(dir);
-			if (i < argc - 1)
+			if (i != 1)
 				putchar('\n');
 		}
 		else
