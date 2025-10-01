@@ -33,7 +33,7 @@ void iterate(DIR *directory)
 
 void print_error(const char *prog_name, const char *argument)
 {
-	fprintf(stderr, "%s: cannot access '%s': %s\n", prog_name, argument,
+	fprintf(stderr, "%s: cannot access %s: %s\n", prog_name, argument,
 			strerror(errno));
 	exit(2);
 }
