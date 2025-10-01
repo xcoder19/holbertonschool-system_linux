@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-int	 print_error(char *program_name, char *argument);
+void print_error(const char *prog_name, const char *argument);
 void iterate(DIR *directory);
 
 /**
@@ -26,17 +26,16 @@ void iterate(DIR *directory)
 }
 
 /**
- * print_error - prints error and return 2
- * @program_name : program name
+ * print_error - prints error and exit with status code 2
+ * @prog_name : program name
  * @argument: argument
- * Return: 2
  */
 
-int print_error(char *program_name, char *argument)
+void print_error(const char *prog_name, const char *argument)
 {
-	fprintf(stderr, "%s: %s %s: %s", program_name, "cannot access", argument,
-			"No such file or directory");
-	return (2);
+	fprintf(stderr, "%s: cannot access '%s': %s\n", prog_name, argument,
+			strerror(errno));
+	exit(2);
 }
 /**
  * main - entry point
@@ -51,7 +50,7 @@ int main(int argc, char *argv[])
 		DIR *dir = opendir(".");
 
 		if (!dir)
-			return (print_error(argv[0], NULL));
+			print_error(argv[0], NULL);
 
 		iterate(dir);
 		closedir(dir);
@@ -62,14 +61,14 @@ int main(int argc, char *argv[])
 		struct stat st;
 
 		if (stat(argv[i], &st) == -1)
-			return (print_error(argv[0], argv[i]));
+			print_error(argv[0], argv[i]);
 
 		if (S_ISDIR(st.st_mode))
 		{
 			DIR *dir = opendir(argv[i]);
 
 			if (!dir)
-				return (print_error(argv[0], argv[i]));
+				print_error(argv[0], argv[i]);
 
 			if (argc > 2)
 				printf("%s:\n", argv[i]);
