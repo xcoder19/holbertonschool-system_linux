@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
 		}
 		if (S_ISDIR(st.st_mode))
 			dirs[dir_count++] = argv[i];
-		else
+	else
 			files[file_count++] = argv[i];
 	}
 
@@ -162,3 +162,4 @@ int main(int argc, char *argv[])
 	free(dirs);
 	return (exit_status);
 }
+
