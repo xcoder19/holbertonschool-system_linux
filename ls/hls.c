@@ -18,7 +18,7 @@ int	 cmp(const void *a, const void *b);
  */
 int cmp(const void *a, const void *b)
 {
-	return strcasecmp(*(const char **)a, *(const char **)b);
+	return (strcasecmp(*(const char **)a, *(const char **)b));
 }
 
 /**
@@ -111,7 +111,6 @@ int main(int argc, char *argv[])
 	if (!files || !dirs)
 		return (2);
 
-	/* First pass: categorize arguments and handle errors */
 	for (i = 1; i < argc; i++)
 	{
 		if (stat(argv[i], &st) == -1)
@@ -126,20 +125,17 @@ int main(int argc, char *argv[])
 			files[file_count++] = argv[i];
 	}
 
-	/* Sort files and directories alphabetically */
 	if (file_count > 1)
 		qsort(files, file_count, sizeof(char *), cmp);
 	if (dir_count > 1)
 		qsort(dirs, dir_count, sizeof(char *), cmp);
 
-	/* Print files first (no blank lines between them) */
 	for (i = 0; i < file_count; i++)
 	{
 		printf("%s\n", files[i]);
 		printed = 1;
 	}
 
-	/* Print directories */
 	for (i = 0; i < dir_count; i++)
 	{
 		DIR *dir = opendir(dirs[i]);
