@@ -1,63 +1,38 @@
-#include <dirent.h>
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <strings.h>
-#include <sys/stat.h>
+#include "hls.h"
 
 /**
- * cmp - compare function for qsort (case-insensitive)
- * @a: first string pointer
- * @b: second string pointer
- * Return: comparison result
- */
-int cmp(const void *a, const void *b)
-{
-	return (strcasecmp(*(const char **)a, *(const char **)b));
-}
-
-/**
- * print_error - prints error message to stderr
+ * print_error - prints error message to stderr using perror
  * @prog_name: program name
- * @argument: argument
+ * @argument: argument that caused error
  */
 void print_error(const char *prog_name, const char *argument)
 {
-	fprintf(stderr, "%s: cannot access %s: %s\n", prog_name, argument,
-			strerror(errno));
+	fprintf(stderr, "%s: cannot access %s: ", prog_name, argument);
+	perror("");
 }
 
 /**
  * iterate - iterate on directory and print name of files (sorted)
- * @directory: DIR *
+ * @directory: DIR pointer
  */
-void iterate(DIR *directory)
+static void iterate(DIR *directory)
 {
 	struct dirent *entry;
 	char		 **names;
-	int			   count = 0, cap = 64, i;
+	int			   count = 0, i;
 
-	names = malloc(sizeof(char *) * cap);
+	names = malloc(sizeof(char *) * 1024);
 	if (!names)
 		return;
 	while ((entry = readdir(directory)) != NULL)
 		if (entry->d_name[0] != '.')
 		{
-			if (count >= cap)
-			{
-				cap *= 2;
-				names = realloc(names, sizeof(char *) * cap);
-				if (!names)
-					return;
-			}
-			names[count] = strdup(entry->d_name);
+			names[count] = _strdup(entry->d_name);
 			if (!names[count])
 				return;
 			count++;
 		}
-	if (count > 1)
-		qsort(names, count, sizeof(char *), cmp);
+	sort_strings(names, count);
 	for (i = 0; i < count; i++)
 	{
 		printf("%s", names[i]);
@@ -65,7 +40,7 @@ void iterate(DIR *directory)
 			printf("  ");
 		free(names[i]);
 	}
-	putchar('\n');
+	printf("\n");
 	free(names);
 }
 
@@ -87,7 +62,7 @@ int print_dir(char *name, char *prog, int multi, int *p)
 		return (2);
 	}
 	if (*p)
-		putchar('\n');
+		printf("\n");
 	if (multi)
 		printf("%s:\n", name);
 	iterate(dir);
@@ -118,7 +93,7 @@ int main(int argc, char *argv[])
 	if (!f || !d)
 		return (2);
 	for (i = 1; i < argc; i++)
-		if (stat(argv[i], &st) == -1)
+		if (lstat(argv[i], &st) == -1)
 		{
 			print_error(argv[0], argv[i]);
 			s = 2;
@@ -127,10 +102,8 @@ int main(int argc, char *argv[])
 			d[dc++] = argv[i];
 		else
 			f[fc++] = argv[i];
-	if (fc > 1)
-		qsort(f, fc, sizeof(char *), cmp);
-	if (dc > 1)
-		qsort(d, dc, sizeof(char *), cmp);
+	sort_strings(f, fc);
+	sort_strings(d, dc);
 	for (i = 0; i < fc; i++, p = 1)
 		printf("%s\n", f[i]);
 	for (i = 0; i < dc; i++)
