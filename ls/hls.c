@@ -18,7 +18,7 @@ int	 cmp(const void *a, const void *b);
  */
 int cmp(const void *a, const void *b)
 {
-	return (strcasecmp(*(const char **)a, *(const char **)b));
+	return strcasecmp(*(const char **)a, *(const char **)b);
 }
 
 /**
