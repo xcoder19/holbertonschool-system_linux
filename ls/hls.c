@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <sys/stat.h>
 
 void print_error(const char *prog_name, const char *argument);
@@ -10,30 +11,60 @@ void iterate(DIR *directory);
 int	 cmp(const void *a, const void *b);
 
 /**
- * cmp - compare function for qsort
+ * cmp - compare function for qsort (case-insensitive)
  * @a: first string pointer
  * @b: second string pointer
  * Return: comparison result
  */
 int cmp(const void *a, const void *b)
 {
-	return (strcmp(*(const char **)a, *(const char **)b));
+	return (strcasecmp(*(const char **)a, *(const char **)b));
 }
 
 /**
- * iterate - iterate on directory and print name of files
+ * iterate - iterate on directory and print name of files (sorted)
  * @directory: DIR *
  */
 void iterate(DIR *directory)
 {
 	struct dirent *entry;
+	char		 **names;
+	int			   count = 0, capacity = 64, i;
+
+	names = malloc(sizeof(char *) * capacity);
+	if (!names)
+		return;
 
 	while ((entry = readdir(directory)) != NULL)
 	{
 		if (entry->d_name[0] != '.')
-			printf("%s ", entry->d_name);
+		{
+			if (count >= capacity)
+			{
+				capacity *= 2;
+				names = realloc(names, sizeof(char *) * capacity);
+				if (!names)
+					return;
+			}
+			names[count] = strdup(entry->d_name);
+			if (!names[count])
+				return;
+			count++;
+		}
+	}
+
+	if (count > 1)
+		qsort(names, count, sizeof(char *), cmp);
+
+	for (i = 0; i < count; i++)
+	{
+		printf("%s", names[i]);
+		if (i < count - 1)
+			printf("  ");
+		free(names[i]);
 	}
 	putchar('\n');
+	free(names);
 }
 
 /**
