@@ -57,7 +57,7 @@ void increment_lap_for_car(Cars *cars, int id)
 void sort_cars(Cars *cars)
 {
 	size_t i, j;
-	Car tmp;
+	Car	   tmp;
 
 	for (i = 0; i < cars->count - 1; i++)
 	{
@@ -65,8 +65,8 @@ void sort_cars(Cars *cars)
 		{
 			if (cars->items[j].id > cars->items[j + 1].id)
 			{
-				tmp = cars->items[j];
-				cars->items[j] = cars->items[j + 1];
+				tmp				   = cars->items[j];
+				cars->items[j]	   = cars->items[j + 1];
 				cars->items[j + 1] = tmp;
 			}
 		}
@@ -86,8 +86,8 @@ void race_state(int *id, size_t size)
 	if (size == 0)
 	{
 		free(cars.items);
-		cars.items    = NULL;
-		cars.count    = 0;
+		cars.items	  = NULL;
+		cars.count	  = 0;
 		cars.capacity = 0;
 		return;
 	}
@@ -112,4 +112,3 @@ void race_state(int *id, size_t size)
 		printf("Car %d [%d laps]\n", cars.items[i].id, cars.items[i].laps);
 	}
 }
-
