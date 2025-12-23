@@ -51,15 +51,26 @@ void increment_lap_for_car(Cars *cars, int id)
 }
 
 /**
- * freeall - free all memory and reset the cars array
+ * sort_cars - sort cars array by id using bubble sort
  * @cars: pointer to Cars dynamic array
  */
-void freeall(Cars *cars)
+void sort_cars(Cars *cars)
 {
-	free(cars->items);
-	cars->items	   = NULL;
-	cars->count	   = 0;
-	cars->capacity = 0;
+	size_t i, j;
+	Car tmp;
+
+	for (i = 0; i < cars->count - 1; i++)
+	{
+		for (j = 0; j < cars->count - i - 1; j++)
+		{
+			if (cars->items[j].id > cars->items[j + 1].id)
+			{
+				tmp = cars->items[j];
+				cars->items[j] = cars->items[j + 1];
+				cars->items[j + 1] = tmp;
+			}
+		}
+	}
 }
 
 /**
@@ -74,7 +85,10 @@ void race_state(int *id, size_t size)
 
 	if (size == 0)
 	{
-		freeall(&cars);
+		free(cars.items);
+		cars.items    = NULL;
+		cars.count    = 0;
+		cars.capacity = 0;
 		return;
 	}
 
