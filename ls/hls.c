@@ -111,6 +111,6 @@ int main(int argc, char *argv[])
 			s = 2;
 	free(f);
 	free(d);
-	return (s);
+	return s;
 }
 
