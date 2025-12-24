@@ -28,7 +28,13 @@ void create_car(Cars *cars, int id)
 	new_car.id	 = id;
 	new_car.laps = 0;
 
-	da_append(cars, new_car);
+	if (cars->count >= cars->capacity)
+	{
+		cars->capacity = cars->capacity == 0 ? 8 : cars->capacity * 2;
+		cars->items =
+			realloc(cars->items, cars->capacity * sizeof(*cars->items));
+	}
+	cars->items[cars->count++] = new_car;
 
 	printf("Car %d joined the race\n", id);
 }
