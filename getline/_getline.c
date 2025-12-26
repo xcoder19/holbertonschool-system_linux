@@ -50,7 +50,8 @@ char *_getline(const int fd)
 	static ssize_t buffer_pos;
 	static ssize_t buffer_len;
 	int			   i	= 0;
-	char		  *line = malloc(READ_SIZE);
+	int			   cap	= READ_SIZE;
+	char		  *line = malloc(cap);
 	ssize_t		   bytes_read;
 	char		  *result;
 
@@ -63,6 +64,11 @@ char *_getline(const int fd)
 				line[i] = '\0';
 				buffer_pos++;
 				return (line);
+			}
+			if (i >= cap - 1)
+			{
+				cap *= 2;
+				line = realloc(line, cap);
 			}
 			line[i++] = buffer[buffer_pos++];
 		}
