@@ -17,7 +17,7 @@ int tprintf(char const *format, ...)
 	int		ret = 0;
 
 	if (!format)
-		return (0);
+		return (-1);
 	va_start(args, format);
 	pthread_mutex_lock(&my_mutex);
 	printf("[%lu] ", pthread_self());
