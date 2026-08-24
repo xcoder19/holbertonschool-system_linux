@@ -10,9 +10,9 @@
  *
  * Return: 1 on success, 0 on error
  */
-static int add_factor(list_t *list, int factor)
+static int add_factor(list_t *list, unsigned long factor)
 {
-	int *value = malloc(sizeof(*value));
+	unsigned long *value = malloc(sizeof(*value));
 
 	if (value == NULL)
 	{
@@ -44,8 +44,8 @@ static list_t *free_list(list_t *list)
  */
 list_t *prime_factors(char const *s)
 {
-	int		n	 = atoi(s);
-	list_t *list = malloc(sizeof(*list));
+	unsigned long n	   = strtoul(s, NULL, 10);
+	list_t		 *list = malloc(sizeof(*list));
 
 	if (list == NULL)
 		return (NULL);
@@ -58,7 +58,7 @@ list_t *prime_factors(char const *s)
 		n /= 2;
 	}
 
-	for (long long factor = 3; factor * factor <= n; factor += 2)
+	for (unsigned long factor = 3; factor * factor <= n; factor += 2)
 	{
 		while (n % factor == 0)
 		{
