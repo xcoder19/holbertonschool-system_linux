@@ -12,14 +12,22 @@
  */
 static int add_factor(list_t *list, unsigned long factor)
 {
-	unsigned long *value = malloc(sizeof(*value));
+	node_t		  *node;
+	unsigned long *value;
+
+	value = malloc(sizeof(*value));
 
 	if (value == NULL)
 	{
 		return (0);
 	}
 	*value = factor;
-	list_add(list, value);
+	node   = list_add(list, value);
+	if (node == NULL)
+	{
+		free(value);
+		return (0);
+	}
 	return (1);
 }
 
@@ -58,7 +66,7 @@ list_t *prime_factors(char const *s)
 		n /= 2;
 	}
 
-	for (unsigned long factor = 3; factor * factor <= n; factor += 2)
+	for (unsigned long factor = 3; factor <= n / factor; factor += 2)
 	{
 		while (n % factor == 0)
 		{

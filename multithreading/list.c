@@ -13,6 +13,8 @@ node_t *node_create(void *content)
 {
 	node_t *node = malloc(sizeof(*node));
 
+	if (node == NULL)
+		return (NULL);
 	node->content = content;
 	node->prev	  = NULL;
 	node->next	  = NULL;
@@ -31,6 +33,8 @@ node_t *list_add(list_t *list, void *content)
 {
 	node_t *node = node_create(content);
 
+	if (node == NULL)
+		return (NULL);
 	node->prev = list->tail;
 	if (list->tail)
 		list->tail->next = node;
