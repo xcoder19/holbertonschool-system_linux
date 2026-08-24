@@ -3,7 +3,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-pthread_mutex_t my_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t my_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 /**
  * tprintf - prints a formatted string with thread ID
