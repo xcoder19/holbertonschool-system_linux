@@ -10,11 +10,11 @@
 int tprintf(char const *format, ...)
 {
 	va_list args;
+	int		ret = 0;
 
 	va_start(args, format);
 	printf("[%lu] ", pthread_self());
-	int ret = vprintf(format, args);
-
+	ret = vprintf(format, args);
 	va_end(args);
 	return (ret);
 }
