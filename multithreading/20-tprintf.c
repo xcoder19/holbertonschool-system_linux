@@ -3,21 +3,19 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+pthread_mutex_t my_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 /**
  * tprintf - prints a formatted string with thread ID
  * @format: format string
  *
  * Return: number of characters printed
  */
-
-pthread_mutex_t my_mutex = PTHREAD_MUTEX_INITIALIZER;
-
 int tprintf(char const *format, ...)
 {
 	va_list args;
 	int		ret = 0;
 
-	(void)format;
 	va_start(args, format);
 	pthread_mutex_lock(&my_mutex);
 	printf("[%lu] ", pthread_self());
