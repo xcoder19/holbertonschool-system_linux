@@ -1,9 +1,9 @@
 #ifndef MULTITHREADING_H
 #define MULTITHREADING_H
 
+#include <pthread.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <pthread.h>
 
 /**
  * struct pixel_s - RGB pixel
@@ -28,8 +28,8 @@ typedef struct pixel_s
  */
 typedef struct img_s
 {
-	size_t w;
-	size_t h;
+	size_t	 w;
+	size_t	 h;
 	pixel_t *pixels;
 } img_t;
 
@@ -41,7 +41,7 @@ typedef struct img_s
  */
 typedef struct kernel_s
 {
-	size_t size;
+	size_t	size;
 	float **matrix;
 } kernel_t;
 
@@ -58,16 +58,19 @@ typedef struct kernel_s
  */
 typedef struct blur_portion_s
 {
-	img_t const *img;
-	img_t *img_blur;
-	size_t x;
-	size_t y;
-	size_t w;
-	size_t h;
+	img_t const	   *img;
+	img_t		   *img_blur;
+	size_t			x;
+	size_t			y;
+	size_t			w;
+	size_t			h;
 	kernel_t const *kernel;
 } blur_portion_t;
 
 void *thread_entry(void *arg);
-int tprintf(char const *format, ...);
+int	  tprintf(char const *format, ...);
+struct list_s;
+typedef struct list_s list_t;
+list_t				 *prime_factors(char const *s);
 
 #endif /* MULTITHREADING_H */
