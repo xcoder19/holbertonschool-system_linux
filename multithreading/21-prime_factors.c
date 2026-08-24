@@ -1,5 +1,7 @@
 #include "list.h"
 #include "multithreading.h"
+#include <ctype.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -45,6 +47,30 @@ static list_t *free_list(list_t *list)
 }
 
 /**
+ * parse_number - Converts a string to a positive unsigned long
+ * @s: String to convert
+ * @number: Address where the converted number is stored
+ *
+ * Return: 1 on success, 0 on error
+ */
+static int parse_number(char const *s, unsigned long *number)
+{
+	char *end;
+
+	if (s == NULL)
+		return (0);
+	while (isspace((unsigned char)*s))
+		s++;
+	if (*s == '-' || *s == '\0')
+		return (0);
+	errno	= 0;
+	*number = strtoul(s, &end, 10);
+	if (errno == ERANGE || *end != '\0' || *number == 0)
+		return (0);
+	return (1);
+}
+
+/**
  * prime_factors - Finds the prime factors of a number
  * @s: String representation of number to factorize
  *
@@ -52,9 +78,12 @@ static list_t *free_list(list_t *list)
  */
 list_t *prime_factors(char const *s)
 {
-	unsigned long n	   = strtoul(s, NULL, 10);
-	list_t		 *list = malloc(sizeof(*list));
+	unsigned long n;
+	list_t		 *list;
 
+	if (!parse_number(s, &n))
+		return (NULL);
+	list = malloc(sizeof(*list));
 	if (list == NULL)
 		return (NULL);
 	list_init(list);
